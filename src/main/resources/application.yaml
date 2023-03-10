@@ -1,0 +1,23 @@
+server:
+  port: 8099
+# 自定义常量
+constants:
+  backendPort: 123456
+spring:
+  application:
+    name: RankPageBackend
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    name: defaultDataSource
+    url: jdbc:mysql://8.134.147.174:3306/rank_page?characterEncoding=UTF-8&serverTimezone=Asia/Shanghai&useUnicode=true&useSSL=false
+    username: root
+    password: e01jnor36dq5
+    type: com.alibaba.druid.pool.DruidDataSource
+mybatis-plus:
+  type-aliases-package: cn.calendo.rankpagebackend.entity
+  configuration:
+    map-underscore-to-camel-case: true
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+  global-config:
+    db-config:
+      id-type: ASSIGN_ID
