@@ -118,4 +118,18 @@ public class PeopleRankImpl extends ServiceImpl<PeopleRankMapper, PeopleRank> im
         return peopleRankList;
     }
 
+    //后台： 查看所有人员信息
+    @Override
+    public List<PeopleRank> showAllPeople() {
+        return list();
+    }
+
+    //后台： 清理所有数据
+    @Override
+    public boolean deletePeopleByTrack(String track) {
+        LambdaQueryWrapper<PeopleRank> lqw = new LambdaQueryWrapper<>();
+        lqw.eq(PeopleRank::getTrack, track);
+        return remove(lqw);
+    }
+
 }

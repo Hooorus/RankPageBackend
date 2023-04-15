@@ -27,5 +27,11 @@ public interface IPeopleRank extends IService<PeopleRank> {
     //前台： 查看自己所选择的赛道的人员信息
     List<PeopleRank> showPeopleSet0ByTrack(String track);
 
+    //后台： 查看所有人员信息
+    List<PeopleRank> showAllPeople();
+
+    //后台： 根据赛道清理数据
+    boolean deletePeopleByTrack(String track);
+
 
 }

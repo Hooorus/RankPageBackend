@@ -3,8 +3,10 @@ package cn.calendo.rankpagebackend.controller;
 import cn.calendo.rankpagebackend.commons.R;
 import cn.calendo.rankpagebackend.entity.PeopleRank;
 import cn.calendo.rankpagebackend.entity.TitleName;
+import cn.calendo.rankpagebackend.entity.VoteNumber;
 import cn.calendo.rankpagebackend.service.PeopleRankImpl;
 import cn.calendo.rankpagebackend.service.TitleNameImpl;
+import cn.calendo.rankpagebackend.service.VoteNumberImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -32,6 +34,9 @@ public class RankPage {
     @Autowired
     private TitleNameImpl titleNameImpl;
 
+    @Autowired
+    private VoteNumberImpl voteNumberImpl;
+
     //后台：设置评分标题
     @PostMapping("/backend/set_title_name")
     public R setTitle(@RequestBody TitleName titleName) {
@@ -53,11 +58,37 @@ public class RankPage {
     public R getTitleName(@RequestParam(value = "title_id") String id) {
         TitleName titleName = titleNameImpl.getTitleName(id);
         if (titleName == null) {
-            log.info("默认标题");
             return R.error(500, "不存在", new Date());
         }
         log.info("查询成功");
         return R.success(200, "查询成功，结果为：" + titleName.getName(), new Date(), titleName.getName());
+    }
+
+    //后台：设置投票最值
+    @PostMapping("/backend/set_vote_number")
+    public R setVoteNumbers(@RequestBody VoteNumber voteNumber) {
+        System.out.println("voteNumber: " + voteNumber);
+        Integer number = voteNumber.getLimitMax();
+        String id = voteNumber.getId();
+        log.info("id:" + id);
+        log.info("number: " + number);
+        boolean resName = voteNumberImpl.setVoteNumber(id, number);
+        if (resName) {
+            return R.success(200, new Date(), "投票最值修改成功,为：" + number);
+        } else {
+            return R.error(500, "投票最值修改失败！", new Date());
+        }
+    }
+
+    //前台：获取投票最值
+    @GetMapping("/front/get_vote_number")
+    public R getVoteNumbers(@RequestParam(value = "vote_id") String id) {
+        VoteNumber voteNumber = voteNumberImpl.getVoteNumber(id);
+        if (voteNumber == null) {
+            return R.error(500, "不存在", new Date());
+        }
+        log.info("查询成功");
+        return R.success(200, "查询成功，结果为：" + voteNumber.getLimitMax(), new Date(), voteNumber.getLimitMax());
     }
 
     //后台：上传人物excel到数据库里
@@ -101,6 +132,28 @@ public class RankPage {
             return R.success(200, String.valueOf(list.size()), new Date(), list);
         } else {
             return R.error(500, "相关人员信息展示失败！", new Date());
+        }
+    }
+
+    //后台： 查看所有人员信息
+    @PostMapping("/backend/get_people_all")
+    public R showAllPeople() {
+        List<PeopleRank> list = peopleRankImpl.showAllPeople();
+        if (list != null) {
+            return R.success(200, String.valueOf(list.size()), new Date(), list);
+        } else {
+            return R.error(500, "相关人员信息展示失败！", new Date());
+        }
+    }
+
+    //后台： 根据赛道清理数据
+    @DeleteMapping("/backend/delete_people_by_track")
+    public R deletePeopleByTrack(@RequestParam(value = "track") String track) {
+        boolean res = peopleRankImpl.deletePeopleByTrack(track);
+        if (res) {
+            return R.success(200, track + "删除成功", new Date());
+        } else {
+            return R.success(500, track + "删除失败", new Date());
         }
     }
 
