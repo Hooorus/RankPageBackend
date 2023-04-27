@@ -9,9 +9,9 @@ spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     name: defaultDataSource
-    url: jdbc:mysql://8.134.147.174:3306/rank_page?characterEncoding=UTF-8&serverTimezone=Asia/Shanghai&useUnicode=true&useSSL=false
-    username: root
-    password: e01jnor36dq5
+    url: jdbc:mysql://servername:3306/rank_page?characterEncoding=UTF-8&serverTimezone=Asia/Shanghai&useUnicode=true&useSSL=false
+    username: username
+    password: password
     type: com.alibaba.druid.pool.DruidDataSource
 mybatis-plus:
   type-aliases-package: cn.calendo.rankpagebackend.entity

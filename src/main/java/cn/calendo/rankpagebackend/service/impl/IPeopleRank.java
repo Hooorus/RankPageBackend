@@ -33,5 +33,4 @@ public interface IPeopleRank extends IService<PeopleRank> {
     //后台： 根据赛道清理数据
     boolean deletePeopleByTrack(String track);
 
-
 }

@@ -147,7 +147,7 @@ public class RankPage {
     }
 
     //后台： 根据赛道清理数据
-    @DeleteMapping("/backend/delete_people_by_track")
+    @PostMapping("/backend/delete_people_by_track")
     public R deletePeopleByTrack(@RequestParam(value = "track") String track) {
         boolean res = peopleRankImpl.deletePeopleByTrack(track);
         if (res) {
