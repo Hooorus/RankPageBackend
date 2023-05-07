@@ -3,6 +3,7 @@ package cn.calendo.rankpagebackend.controller;
 import cn.calendo.rankpagebackend.commons.R;
 import cn.calendo.rankpagebackend.entity.PeopleRank;
 import cn.calendo.rankpagebackend.entity.TitleName;
+import cn.calendo.rankpagebackend.entity.TrackList;
 import cn.calendo.rankpagebackend.entity.VoteNumber;
 import cn.calendo.rankpagebackend.service.PeopleRankImpl;
 import cn.calendo.rankpagebackend.service.TitleNameImpl;
@@ -154,6 +155,17 @@ public class RankPage {
             return R.success(200, track + "删除成功", new Date());
         } else {
             return R.success(500, track + "删除失败", new Date());
+        }
+    }
+
+    //前台： 查询所有赛道并返回给下拉框
+    @PostMapping("/front/get_track_all")
+    public R showTrackAll() {
+        List<TrackList> list = peopleRankImpl.showTrackAll();
+        if (list != null) {
+            return R.success(200, String.valueOf(list.size()), new Date(), list);
+        } else {
+            return R.error(500, "赛道展示失败！", new Date());
         }
     }
 

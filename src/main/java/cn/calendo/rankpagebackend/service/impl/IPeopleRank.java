@@ -1,6 +1,7 @@
 package cn.calendo.rankpagebackend.service.impl;
 
 import cn.calendo.rankpagebackend.entity.PeopleRank;
+import cn.calendo.rankpagebackend.entity.TrackList;
 import com.baomidou.mybatisplus.extension.service.IService;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -32,5 +33,8 @@ public interface IPeopleRank extends IService<PeopleRank> {
 
     //后台： 根据赛道清理数据
     boolean deletePeopleByTrack(String track);
+
+    //前台： 查询所有赛道并返回给下拉框
+    List<TrackList> showTrackAll();
 
 }

@@ -2,7 +2,10 @@ package cn.calendo.rankpagebackend.service;
 
 import cn.calendo.rankpagebackend.Mapper.PeopleRankMapper;
 import cn.calendo.rankpagebackend.entity.PeopleRank;
+import cn.calendo.rankpagebackend.entity.TrackList;
 import cn.calendo.rankpagebackend.service.impl.IPeopleRank;
+import cn.hutool.core.bean.BeanUtil;
+import cn.hutool.core.bean.copier.CopyOptions;
 import cn.hutool.poi.excel.ExcelReader;
 import cn.hutool.poi.excel.ExcelUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
@@ -12,8 +15,9 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 /**
  * @author Calendo
@@ -130,6 +134,32 @@ public class PeopleRankImpl extends ServiceImpl<PeopleRankMapper, PeopleRank> im
         LambdaQueryWrapper<PeopleRank> lqw = new LambdaQueryWrapper<>();
         lqw.eq(PeopleRank::getTrack, track);
         return remove(lqw);
+    }
+
+    //前台： 查询所有赛道并返回给下拉框
+    @Override
+    public List<TrackList> showTrackAll() {
+        //输出行属性但是只选择指定列的条件构造器，得出list
+        LambdaQueryWrapper<PeopleRank> lqw = new LambdaQueryWrapper<>();
+        lqw.select(PeopleRank::getId, PeopleRank::getTrack);
+        List<PeopleRank> peopleRankList = list(lqw);
+        //转换流，并使用toMap进行指定属性进行去重
+        ArrayList<PeopleRank> distinctResList = peopleRankList.stream()
+                .collect(Collectors.collectingAndThen(
+                        Collectors.toMap(PeopleRank::getTrack, Function.identity(), (a, b) -> a), map -> new ArrayList<>(map.values())
+                ));
+        System.out.println(distinctResList);
+        //构造bean映射关系
+        HashMap<String, String> fieldMapping = new HashMap<>();
+        fieldMapping.put("track", "trackName");
+        //指定映射关系
+        CopyOptions options = CopyOptions.create().setIgnoreProperties("name", "score").setIgnoreNullValue(true).setFieldMapping(fieldMapping);
+        //复制bean
+        List<TrackList> lists = BeanUtil.copyToList(distinctResList, TrackList.class, options);
+        //从List<TrackList>转换为TrackList[]
+        //TrackList[] trackLists = lists.toArray(new TrackList[0]);
+        //System.out.println(Arrays.toString(trackLists));
+        return lists;
     }
 
 }
